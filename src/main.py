@@ -9,7 +9,7 @@ load_dotenv()
 
 table_name = 'bank_statements'
 folder_path = '/Users/xuanhezhang/Downloads/statements'
-current_user = 'Xuanhe ZHANG'
+current_user = 'Mao Mao Niu'
 
 def process_excel_folder(folder_path):
     """Process all Excel files in a folder and save to SQLite"""
