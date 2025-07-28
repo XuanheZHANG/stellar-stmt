@@ -2,16 +2,16 @@ import pandas as pd
 import os
 import glob
 from dotenv import load_dotenv
-from database import save_to_sqlite, read_from_sqlite, clear_data_in_sqlite
+import bank_stmt_db as bank_stmt_db
 
 # 加载环境变量
 load_dotenv()
 
-table_name = 'bank_statements'
-folder_path = '/Users/xuanhezhang/Downloads/statements'
-current_user = 'Mao Mao Niu'
+folder_path_hsbc = '/Users/xuanhezhang/Downloads/statements'
+folder_path_icbc = '/Users/xuanhezhang/Downloads/statements_icbc'
+current_user = 'Xuanhe'
 
-def process_excel_folder(folder_path):
+def process_hsbc_bank_stmt(folder_path):
     """Process all Excel files in a folder and save to SQLite"""
     if not os.path.isdir(folder_path):
         print(f"Error: '{folder_path}' is not a valid directory")
@@ -49,27 +49,37 @@ def process_excel_folder(folder_path):
                 # Use single table for all Excel files]
                 # Save to SQLite with append mode
                 print(f"Processing file: {file_name}")
-                save_to_sqlite(df, table_name, file_name, current_user, if_exists='append')
+                bank_stmt_db.save_to_sqlite(df, file_name, current_user, if_exists='append')
             except Exception as e:
                 print(f"Error processing file {file}: {e}")
 
 def main():
     print("Python project initialized successfully!")
     print("Supported features:")
-    print("1. Process Excel folder and save to SQLite database")
-    print("2. Read data from SQLite database")
-    print("3. Init/Reinit transaction table")
+    print("1. Init Bank Statement Table Structure")
+    print("2. Process HSBC Excel Bank Statement Folder and Save to SQLite database")
+    print("3. Prooces ICBC Excel Bank Statement Folder and Save to SQLite database")
+    print("4. Read data from SQLite database")
+    print("5. Clear All Data in Transaction Table")
+    print("6. Clear Data in Transaction Table for the Given File Name")
     
-    choice = input("Please enter your choice (1 or 2 or 3): ")
+    
+    choice = input("Please enter your choice [1-6]: ")
     if choice == '1':
-        process_excel_folder(folder_path)
+        bank_stmt_db.init_table()
     elif choice == '2':
-        read_from_sqlite(table_name)
+        process_hsbc_bank_stmt(folder_path_hsbc)
     elif choice == '3':
-        clear_data_in_sqlite(table_name)
-        print(f"Database {table_name} reinitialized successfully!")
+        process_hsbc_bank_stmt(folder_path_icbc)    
+    elif choice == '4':
+        bank_stmt_db.read_from_sqlite()
+    elif choice == '5':
+        bank_stmt_db.clear_data_in_sqlite()
+    elif choice == '6':
+        file_name = input("Please enter the file name: ")
+        bank_stmt_db.clear_data_in_sqlite(file_name)
     else:
-        print("Invalid choice. Please enter 1 or 2 or 3.")
+        print("Invalid choice. Please enter [1-6].")
 
 if __name__ == "__main__":
     main()
