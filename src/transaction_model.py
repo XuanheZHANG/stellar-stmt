@@ -6,7 +6,7 @@ class TransactionRecord:
     """
     
     # Define field mapping (Excel column name -> Model property name)
-    FIELD_MAPPING = {
+    HSBC_FIELD_MAPPING = {
         'Date': 'date',
         'Category': 'category',
         'Description': 'description',
@@ -34,7 +34,7 @@ class TransactionRecord:
         self.updated_time = kwargs.get('updated_time', int(datetime.now().timestamp() * 1000))  # Unix Epoch Milliseconds
     
     @classmethod
-    def from_dataframe(cls, df, file_name, current_user):
+    def from_hsbc_dataframe(cls, df, file_name, current_user):
         """
         Create a list of TransactionRecord objects from a DataFrame
         """
@@ -46,7 +46,7 @@ class TransactionRecord:
             }
             
             # Map DataFrame columns to model fields
-            for excel_col, field in cls.FIELD_MAPPING.items():
+            for excel_col, field in cls.HSBC_FIELD_MAPPING.items():
                 if excel_col in row:
                     record_data[field] = row[excel_col]
             

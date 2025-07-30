@@ -47,7 +47,7 @@ def save_to_sqlite(df, file_name, current_user, if_exists='replace'):
         columns = ', '.join(sorted_columns)
         placeholders = ', '.join(['?'] * len(sorted_columns))
         insert_query = f"INSERT INTO {table_name} ({columns}) VALUES ({placeholders})"
-        transaction_records = TransactionRecord.from_dataframe(df, file_name, current_user)
+        transaction_records = TransactionRecord.from_hsbc_dataframe(df, file_name, current_user)
         # Convert TransactionRecords to dictionaries first
         if (isinstance(transaction_records, list) 
             and len(transaction_records) > 0 
