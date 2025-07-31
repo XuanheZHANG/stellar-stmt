@@ -5,6 +5,7 @@ from transaction_model import TransactionRecord
 # Module-level configuration
 table_name = 'bank_statements'
 BANK_STMT_COLUMN_DEF = {
+    'tag': 'TEXT',  # LLM-generated audit tag
     'date': 'INTEGER', #YYYYMMDD
     'category': 'TEXT',
     'description': 'TEXT',
@@ -35,7 +36,7 @@ def init_table():
     finally:
         connection.close()
 
-def save_to_sqlite(df, file_name, current_user, if_exists='replace'):
+def save_to_sqlite(transaction_records,if_exists='replace'):
     """Save DataFrame to SQLite database table"""
     connection = create_connection()
     try:
@@ -47,7 +48,7 @@ def save_to_sqlite(df, file_name, current_user, if_exists='replace'):
         columns = ', '.join(sorted_columns)
         placeholders = ', '.join(['?'] * len(sorted_columns))
         insert_query = f"INSERT INTO {table_name} ({columns}) VALUES ({placeholders})"
-        transaction_records = TransactionRecord.from_hsbc_dataframe(df, file_name, current_user)
+        
         # Convert TransactionRecords to dictionaries first
         if (isinstance(transaction_records, list) 
             and len(transaction_records) > 0 

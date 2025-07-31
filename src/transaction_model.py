@@ -1,3 +1,4 @@
+import pandas as pd
 from datetime import datetime
 
 class TransactionRecord:
@@ -42,14 +43,17 @@ class TransactionRecord:
         for _, row in df.iterrows():
             record_data = {
                 'file_name': file_name,
-                'updated_by': current_user
+                'updated_by': current_user,
+                'bank': 'HSBC'
             }
             
             # Map DataFrame columns to model fields
             for excel_col, field in cls.HSBC_FIELD_MAPPING.items():
                 if excel_col in row:
+                    # TODO: Convert date to YYYYMMDD integer
+                    # if field == 'date':
+                    #     record_data[field] = cls.dt64ToInt(row[excel_col])
                     record_data[field] = row[excel_col]
-            
             records.append(cls(**record_data))
         return records
     
